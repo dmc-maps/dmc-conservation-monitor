@@ -47,9 +47,9 @@ const SEED = {
       name: "Sheldon Field",
       acreage: null,
       status: "stable",
-      next_flight_date: "2026-07-08",
-      // PLACEHOLDER geometry — replace with the real parcel boundary
-      // before client demo. See IMAGERY_SWAP.md.
+      next_flight_date: null,
+      // PLACEHOLDER geometry — real boundary and prior flight data are
+      // archived offline and not yet loaded. See IMAGERY_SWAP.md.
       geometry: {
         type: "Polygon",
         coordinates: [[[-72.6157, 42.3296], [-72.6131, 42.3290], [-72.6126, 42.3273], [-72.6149, 42.3268], [-72.6162, 42.3281], [-72.6157, 42.3296]]],
@@ -150,7 +150,7 @@ const SEED = {
       parcel_id: "44444444-4444-4444-8444-444444444444",
       date: "2026-06-02",
       type: "field_note",
-      notes: "Site walk ahead of July baseline flight. Boundary GeoJSON pending from MCCC GIS.",
+      notes: "Placeholder parcel — boundary and prior flight data archived offline, not yet loaded into this platform.",
       created_by: "Devin Clark",
     },
   ],

@@ -9,7 +9,7 @@ The demo serves orthomosaic tiles and media images straight from this repo (GitH
 | Montview boundary + 4/14/2026 ortho tiles | **Real** (MassGIS L3 boundary; WebODM ortho, 5 cm GSD) |
 | Terrace Trails boundary + 4/14/2026 ortho tiles | **Real** (Cutchins parcel boundary) |
 | County Jail Farm boundary + 4/14/2026 ortho tiles | **Real** |
-| Sheldon Field boundary | **PLACEHOLDER** — approximate sketch near Old Ferry Rd; no flight yet (scheduled 2026-07-08) |
+| Sheldon Field boundary | **PLACEHOLDER** — approximate sketch near Old Ferry Rd. Real boundary and prior flight data exist but are archived offline; load whenever convenient |
 | Sheldon Field acreage | null — set with real boundary |
 | Montview 2025-10-02 "fall reference flight" | **Synthetic demo row** to demonstrate the date slider; no tiles |
 | Field photos in `/media` | Real 4/14/2026 drone captures, downsized |
@@ -57,14 +57,15 @@ The footprint is the ortho bounding box (`gdalinfo` corner coordinates) or the b
 
 Same pattern for media: upload to the `media` bucket and update `media.storage_path` / `thumbnail_path` to the public Storage URLs.
 
-## Sheldon Field — real data insertion
+## Sheldon Field — real data insertion (when the archive is at hand)
 
-1. Get the parcel boundary (MassGIS L3 assessor layer, `TaxParcels` folder in the MCCC drive has the Northampton extract).
-2. `ogr2ogr -f GeoJSON -t_srs EPSG:4326 sheldon.geojson <source> -where "..."`
-3. ```sql
+Sheldon Field's boundary and prior flight data are archived offline (not on this machine). When retrieved:
+
+1. Convert the boundary to EPSG:4326 GeoJSON: `ogr2ogr -f GeoJSON -t_srs EPSG:4326 sheldon.geojson <source>`
+2. ```sql
    update parcels
-   set geometry = '<geojson geometry>'::jsonb, acreage = <acres>
+   set geometry = '<geojson geometry>'::jsonb, acreage = <acres>, next_flight_date = <date or null>
    where id = '44444444-4444-4444-8444-444444444444';
    ```
-4. Mirror in `js/seed-data.js` (Sheldon entry is marked PLACEHOLDER).
-5. After the July flight: tile + insert `flight_history` per the pipeline above, and delete the synthetic Montview 2025-10-02 row if a cleaner history is preferred.
+3. Mirror in `js/seed-data.js` (Sheldon entry is marked PLACEHOLDER).
+4. If archived imagery is worth surfacing: tile + insert `flight_history` per the pipeline above. Also delete the synthetic Montview 2025-10-02 row if a cleaner history is preferred.
