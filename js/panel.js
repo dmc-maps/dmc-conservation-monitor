@@ -81,7 +81,16 @@ const Panel = (() => {
     el("panel-obs-empty").style.display = items.length ? "none" : "";
     for (const o of items) {
       const li = document.createElement("li");
-      li.innerHTML = `<div class="obs-head"><span class="obs-type">${o.type.replace(/_/g, " ")}</span><span class="obs-date">${fmtDate(o.date)}</span></div><p>${o.notes || ""}</p><span class="obs-by">${o.created_by || ""}</span>`;
+      li.innerHTML = `<div class="obs-head"><span class="obs-type">${o.type.replace(/_/g, " ")}</span><span class="obs-date">${fmtDate(o.date)}</span><button class="obs-delete" title="Delete observation">×</button></div><p>${o.notes || ""}</p><span class="obs-by">${o.created_by || ""}</span>`;
+      li.querySelector(".obs-delete").addEventListener("click", async () => {
+        if (!confirm("Delete this observation?")) return;
+        try {
+          await DB.deleteObservation(o.id);
+          await App.reload();
+        } catch (err) {
+          alert(`Delete failed: ${err.message}`);
+        }
+      });
       list.appendChild(li);
     }
   }

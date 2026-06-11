@@ -3,8 +3,7 @@
 // Used as a fallback when the Supabase tables are not yet
 // created, so the GitHub Pages demo is never blank.
 // Parcel geometries are real MassGIS L3 assessor boundaries
-// (EPSG:4326). Sheldon Field is an approximate placeholder —
-// see IMAGERY_SWAP.md.
+// (EPSG:4326).
 // ============================================================
 
 const SEED = {
@@ -40,19 +39,6 @@ const SEED = {
       geometry: {
         type: "Polygon",
         coordinates: [[[-72.6168693, 42.3186578], [-72.6171415, 42.3183107], [-72.6202838, 42.319584], [-72.6200698, 42.3198846], [-72.6168693, 42.3186578]]],
-      },
-    },
-    {
-      id: "44444444-4444-4444-8444-444444444444",
-      name: "Sheldon Field",
-      acreage: null,
-      status: "stable",
-      next_flight_date: null,
-      // PLACEHOLDER geometry — real boundary and prior flight data are
-      // archived offline and not yet loaded. See IMAGERY_SWAP.md.
-      geometry: {
-        type: "Polygon",
-        coordinates: [[[-72.6157, 42.3296], [-72.6131, 42.3290], [-72.6126, 42.3273], [-72.6149, 42.3268], [-72.6162, 42.3281], [-72.6157, 42.3296]]],
       },
     },
   ],
@@ -143,14 +129,6 @@ const SEED = {
       date: "2026-04-14",
       type: "drone_flight",
       notes: "Spring baseline orthomosaic flight along Venturers Field Rd frontage.",
-      created_by: "Devin Clark",
-    },
-    {
-      id: "a4444444-0000-4000-8000-000000000001",
-      parcel_id: "44444444-4444-4444-8444-444444444444",
-      date: "2026-06-02",
-      type: "field_note",
-      notes: "Placeholder parcel — boundary and prior flight data archived offline, not yet loaded into this platform.",
       created_by: "Devin Clark",
     },
   ],

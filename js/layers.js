@@ -50,9 +50,11 @@ const Layers = (() => {
         const gj = await res.json();
         if (gj.error) throw new Error(gj.error.message || "service error");
         group.clearLayers();
+        // External reference layers are display-only: no popups, and
+        // interactive:false so clicks pass through to DMC layers.
         group.addLayer(L.geoJSON(gj, {
           style: def.style,
-          onEachFeature: (f, l) => l.bindPopup(`<pre class="gj-props">${escapeHtml(JSON.stringify(f.properties, null, 1))}</pre>`),
+          interactive: false,
         }));
         statusEl.textContent = "";
       } catch (e) {
@@ -134,6 +136,7 @@ const Layers = (() => {
     if (flight.footprint_geojson && document.getElementById("toggle-footprints").checked) {
       footprintLayer = L.geoJSON(flight.footprint_geojson, {
         style: { color: "#c8b89a", weight: 2, dashArray: "6 4", fill: false },
+        interactive: false, // never had click behavior; don't block parcel clicks
       }).addTo(map);
     }
     if (flight.orthomosaic_url && document.getElementById("toggle-orthos").checked) {

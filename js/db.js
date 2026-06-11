@@ -24,6 +24,8 @@ const DB = (() => {
     try {
       const saved = JSON.parse(localStorage.getItem(LS_KEY) || "{}");
       for (const t of Object.keys(local)) if (saved[t]) local[t] = local[t].concat(saved[t]);
+      const deleted = new Set(saved._deleted || []);
+      if (deleted.size) for (const t of Object.keys(local)) local[t] = local[t].filter((r) => !deleted.has(r.id));
     } catch (e) { /* corrupt localStorage — ignore */ }
   }
 
@@ -85,6 +87,24 @@ const DB = (() => {
     return rows[0];
   }
 
+  // Delete an observation and any media rows attached to it.
+  async function deleteObservation(id) {
+    if (mode === "local") {
+      const removedIds = [id, ...local.media.filter((m) => m.observation_id === id).map((m) => m.id)];
+      local.observations = local.observations.filter((o) => o.id !== id);
+      local.media = local.media.filter((m) => m.observation_id !== id);
+      try {
+        const saved = JSON.parse(localStorage.getItem(LS_KEY) || "{}");
+        for (const t of ["observations", "media"]) if (saved[t]) saved[t] = saved[t].filter((r) => !removedIds.includes(r.id));
+        saved._deleted = [...new Set([...(saved._deleted || []), ...removedIds])];
+        localStorage.setItem(LS_KEY, JSON.stringify(saved));
+      } catch (e) { /* non-fatal for a demo */ }
+      return;
+    }
+    await rest(`media?observation_id=eq.${id}`, { method: "DELETE" });
+    await rest(`observations?id=eq.${id}`, { method: "DELETE" });
+  }
+
   // Upload to Supabase Storage; returns a public URL. In local mode
   // (or if storage policies reject the write) returns a data URL so
   // the demo flow still completes.
@@ -107,5 +127,5 @@ const DB = (() => {
     });
   }
 
-  return { init, fetchAll, insert, uploadMedia, get mode() { return mode; } };
+  return { init, fetchAll, insert, deleteObservation, uploadMedia, get mode() { return mode; } };
 })();

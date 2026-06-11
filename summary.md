@@ -16,7 +16,7 @@ Live MVP demo of a conservation land monitoring platform for **Meadow City Conse
 |---|---|
 | Frontend | Complete, verified in browser preview |
 | Real parcel boundaries | Montview (3.246 ac), Terrace Trails (8.794 ac), County Jail Farm (3.0 ac) — MassGIS L3 via ogr2ogr from `Desktop\MCCC\Orthos\4.14.26\...\QGIS Exports` |
-| Sheldon Field | Placeholder polygon + null acreage; real boundary and prior flight data archived offline (intentionally deferred) |
+| Sheldon Field | **Removed entirely per Devin (2026-06-11)** — real boundary/flight data archived offline; he will add it later with real geometry |
 | Ortho tiles | 4/14/2026 flights tiled to WebP XYZ z16–21 (~5.6 MB total), committed under `/tiles`, served from Pages |
 | Supabase tables | **NOT yet created** — `schema.sql` must be run in the SQL Editor. A legacy prototype `parcels` table (April experiment, different columns) exists; schema.sql renames it to `parcels_legacy_backup` |
 | Fallback mode | App auto-detects missing tables and runs on `js/seed-data.js` + localStorage, so the demo works regardless |
@@ -33,7 +33,7 @@ Live MVP demo of a conservation land monitoring platform for **Meadow City Conse
 ## Immediate next steps
 
 1. Run `schema.sql` in the Supabase SQL Editor (~1 min) → badge flips to `supabase: connected`.
-2. Sheldon Field: leave as placeholder — real boundary + flight data are archived offline; load per IMAGERY_SWAP.md when retrieved.
+2. Sheldon Field is intentionally absent — Devin will insert it with real geometry later (procedure: README §3 / IMAGERY_SWAP.md).
 3. Before showing Jane Potter: consider setting one parcel to `watch` temporarily to demonstrate status colors (spec seeds everything `stable`).
 4. Before any production/client login use: enable RLS + policies, regenerate the anon key if desired.
 

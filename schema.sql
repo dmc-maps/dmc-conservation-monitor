@@ -89,8 +89,7 @@ create index if not exists flights_parcel_idx on public.flight_history (parcel_i
 
 -- ---- seed: parcels ----------------------------------------------------------
 -- Montview / Terrace Trails / County Jail Farm geometries are real
--- MassGIS L3 assessor boundaries. Sheldon Field is an approximate
--- placeholder (see IMAGERY_SWAP.md).
+-- MassGIS L3 assessor boundaries.
 
 insert into public.parcels (id, name, acreage, status, next_flight_date, geometry) values
 ('11111111-1111-4111-8111-111111111111', 'Montview', 3.246, 'stable', '2026-10-15',
@@ -98,9 +97,7 @@ insert into public.parcels (id, name, acreage, status, next_flight_date, geometr
 ('22222222-2222-4222-8222-222222222222', 'Terrace Trails', 8.794, 'stable', '2026-10-15',
  '{"type":"Polygon","coordinates":[[[-72.6218421,42.3194483],[-72.620934,42.3205148],[-72.6208643,42.3205035],[-72.620445,42.3204355],[-72.6199817,42.3210503],[-72.6199097,42.3210379],[-72.6200264,42.3208744],[-72.61949,42.3206992],[-72.6200698,42.3198846],[-72.6202838,42.319584],[-72.6204544,42.3193442],[-72.6205541,42.3192042],[-72.620679,42.3190287],[-72.6212144,42.3182765],[-72.6215415,42.3184479],[-72.6221915,42.319038],[-72.6218421,42.3194483]]]}'::jsonb),
 ('33333333-3333-4333-8333-333333333333', 'County Jail Farm', 3.0, 'stable', '2026-10-15',
- '{"type":"Polygon","coordinates":[[[-72.6168693,42.3186578],[-72.6171415,42.3183107],[-72.6202838,42.319584],[-72.6200698,42.3198846],[-72.6168693,42.3186578]]]}'::jsonb),
-('44444444-4444-4444-8444-444444444444', 'Sheldon Field', null, 'stable', null,
- '{"type":"Polygon","coordinates":[[[-72.6157,42.3296],[-72.6131,42.329],[-72.6126,42.3273],[-72.6149,42.3268],[-72.6162,42.3281],[-72.6157,42.3296]]]}'::jsonb)
+ '{"type":"Polygon","coordinates":[[[-72.6168693,42.3186578],[-72.6171415,42.3183107],[-72.6202838,42.319584],[-72.6200698,42.3198846],[-72.6168693,42.3186578]]]}'::jsonb)
 on conflict (id) do nothing;
 
 -- ---- seed: flight history ----------------------------------------------------
@@ -138,9 +135,7 @@ insert into public.observations (id, parcel_id, date, type, notes, created_by) v
 ('a2222222-0000-4000-8000-000000000002', '22222222-2222-4222-8222-222222222222', '2026-04-16', 'gps_survey',
  'Trail network GPS survey — centerlines collected for print layout revision.', 'Devin Clark'),
 ('a3333333-0000-4000-8000-000000000001', '33333333-3333-4333-8333-333333333333', '2026-04-14', 'drone_flight',
- 'Spring baseline orthomosaic flight along Venturers Field Rd frontage.', 'Devin Clark'),
-('a4444444-0000-4000-8000-000000000001', '44444444-4444-4444-8444-444444444444', '2026-06-02', 'field_note',
- 'Placeholder parcel — boundary and prior flight data archived offline, not yet loaded into this platform.', 'Devin Clark')
+ 'Spring baseline orthomosaic flight along Venturers Field Rd frontage.', 'Devin Clark')
 on conflict (id) do nothing;
 
 -- ---- seed: media ----------------------------------------------------------------

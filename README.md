@@ -17,7 +17,7 @@ This means the Pages deploy is never blank, even before any backend setup.
 
 1. Open the MCCC Supabase project (`vilffekbihdbudjctrnx`) → **SQL Editor**.
 2. Paste and run the entire contents of [`schema.sql`](schema.sql).
-   - It creates `parcels`, `observations`, `media`, `species_flags`, `flight_history` with check constraints and seed rows (real MassGIS boundaries for Montview, Terrace Trails, County Jail Farm; placeholder for Sheldon Field).
+   - It creates `parcels`, `observations`, `media`, `species_flags`, `flight_history` with check constraints and seed rows (real MassGIS boundaries for Montview, Terrace Trails, County Jail Farm).
    - The pre-existing prototype `parcels` table from the April webmap experiment is **renamed to `parcels_legacy_backup`**, not dropped. Delete it when you no longer need it.
    - It also creates `media` and `orthos` storage buckets with public read and demo anon-upload policies.
 3. Reload the live site — the header badge should switch to `supabase: connected`.
@@ -38,10 +38,10 @@ For the demo, orthomosaic tiles and seeded media images are served **from this r
 Parcel boundaries live in `parcels.geometry` (GeoJSON, EPSG:4326) and in the local fallback `js/seed-data.js`.
 
 - Montview, Terrace Trails, County Jail Farm: real MassGIS L3 assessor boundaries (converted from the QGIS Exports shapefiles, source copies in `/data`).
-- **Sheldon Field is an approximate placeholder.** When the real boundary is available:
-  1. Convert to EPSG:4326 GeoJSON (`ogr2ogr -f GeoJSON -t_srs EPSG:4326 out.geojson in.shp`).
-  2. `update public.parcels set geometry = '<geojson>'::jsonb, acreage = <ac> where name = 'Sheldon Field';`
-  3. Mirror the change in `js/seed-data.js` so local demo mode matches.
+- To add a parcel (e.g. Sheldon Field later, with real geometry):
+  1. Convert the boundary to EPSG:4326 GeoJSON (`ogr2ogr -f GeoJSON -t_srs EPSG:4326 out.geojson in.shp`).
+  2. `insert into public.parcels (name, acreage, status, geometry) values ('<name>', <ac>, 'stable', '<geojson geometry>'::jsonb);`
+  3. Mirror the row in `js/seed-data.js` so local demo mode matches.
 
 ## 4. New client onboarding (resale checklist)
 

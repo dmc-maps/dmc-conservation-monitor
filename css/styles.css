@@ -230,6 +230,18 @@ main { position: relative; height: calc(100% - 64px); }
   text-transform: uppercase;
 }
 .obs-date { font-family: "JetBrains Mono", monospace; font-size: 11px; }
+.obs-delete {
+  background: none;
+  border: none;
+  color: var(--tan);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0 0 8px;
+  opacity: 0.5;
+}
+.obs-list li:hover .obs-delete { opacity: 1; }
+.obs-delete:hover { color: var(--action); }
 .obs-list p { margin: 4px 0 2px; font-size: 13px; line-height: 1.4; }
 .obs-by { font-size: 11px; color: var(--tan); }
 
