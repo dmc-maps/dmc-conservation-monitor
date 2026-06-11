@@ -32,9 +32,16 @@ const DMC_CONFIG = {
     action_required: { color: "#e63946", label: "Action Required" },
   },
 
-  // Michigan bbox — MI-specific layers are hidden when the map
-  // center falls outside this box.
-  miBbox: { west: -90.4, east: -82.4, south: 41.7, north: 48.3 },
+  // Layer panel groups. The national group ships with every deploy but
+  // is hidden for MCCC (show: false) — flip to true for clients that
+  // want nationwide layers; the definitions below stay intact either
+  // way. Groups with a bbox only appear while the map center is inside
+  // that region.
+  layerGroups: {
+    national: { label: "National", show: false },
+    massachusetts: { label: "Massachusetts", show: true, bbox: { west: -73.6, east: -69.9, south: 41.2, north: 42.9 } },
+    michigan: { label: "Michigan", show: true, bbox: { west: -90.4, east: -82.4, south: 41.7, north: 48.3 } },
+  },
 
   baseLayers: {
     osm: {
@@ -84,6 +91,30 @@ const DMC_CONFIG = {
       url: "https://hazards.fema.gov/gis/nfhl/services/public/NFHL/MapServer/WMSServer",
       params: { layers: "28", format: "image/png", transparent: true },
       opacity: 0.6,
+    },
+    {
+      id: "ma_dep_wetlands",
+      group: "massachusetts",
+      label: "MA: DEP Wetlands",
+      type: "arcgis-geojson",
+      url: "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/DEP_Wetlands_FieldMaps/MapServer/1",
+      style: { color: "#4a90a4", weight: 1, fillOpacity: 0.3 },
+    },
+    {
+      id: "ma_open_space",
+      group: "massachusetts",
+      label: "MA: Protected Open Space",
+      type: "arcgis-geojson",
+      url: "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/openspace/MapServer/0",
+      style: { color: "#74c69d", weight: 1, fillOpacity: 0.2 },
+    },
+    {
+      id: "ma_nhesp_habitat",
+      group: "massachusetts",
+      label: "MA: NHESP Priority Habitat",
+      type: "arcgis-geojson",
+      url: "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/NHESP_Priority_Habitats/MapServer/0",
+      style: { color: "#b07aa1", weight: 1, fillOpacity: 0.25 },
     },
     {
       id: "mi_egle_nwi",

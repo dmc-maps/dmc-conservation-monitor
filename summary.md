@@ -27,7 +27,7 @@ Live MVP demo of a conservation land monitoring platform for **Meadow City Conse
 1. **Dual-mode data layer** (`js/db.js`): probes `parcels` with explicit columns so the legacy table 400s → falls back to seed data. Header badge shows the active mode.
 2. **Tiles in the repo**, not Storage: WebP tiles for 3 small parcels are only 5.6 MB; zero backend dependency for the sales demo. `flight_history.orthomosaic_url` is a Leaflet tile template, so swapping to Storage URLs later is a row update, not a code change (IMAGERY_SWAP.md).
 3. **Seeds duplicated** in `schema.sql` and `js/seed-data.js` with fixed UUIDs — keep them in sync when editing.
-4. **MI layers** render only when map center is in the Michigan bbox (future MI clients; hidden for MCCC).
+4. **Layer groups** (`config.js → layerGroups`): national layers are defined but hidden for MCCC (`show: false` — flip per client); Massachusetts group (MassGIS REST: DEP Wetlands, Protected Open Space, NHESP Priority Habitat) and Michigan group are bbox-gated to the map center's region. Legacy MassGIS GeoServer WMS is dead; use arcgisserver.digital.mass.gov.
 5. A synthetic Montview 2025-10-02 flight row (no tiles) exists purely so the date slider demonstrates scrubbing between flights.
 
 ## Immediate next steps

@@ -57,11 +57,19 @@ Everything client-specific is in `config.js` + the database. To stand up a new c
 
 Per-client cost at demo scale: $0 (Supabase free tier + GitHub Pages).
 
-## 5. Michigan layers
+## 5. Reference layers & regional groups
 
-MI-specific layers appear in the layer panel **only when the map center is inside the Michigan bbox** (lon −90.4 → −82.4, lat 41.7 → 48.3) — for MCCC (Massachusetts) the section stays hidden. Pan the map to Michigan to see it.
+Layers are organized into groups in `config.js → layerGroups`, each with a `show` flag and an optional `bbox`:
 
-- **MI: EGLE Wetlands (NWI)** — queried live as GeoJSON from the EGLE ArcGIS REST service (`WrdOpenData/MapServer/9`) within the current map extent, re-queried on pan/zoom, capped at 500 features per request.
+- **National** (NWI Wetlands, USGS 3DEP Hillshade, USGS Hydrography, FEMA Flood Zones) — **defined but hidden for the MCCC deploy** (`show: false`). The definitions ship with every copy of the product; flip `show: true` in `config.js` for clients who want nationwide layers. No other code changes needed.
+- **Massachusetts** (`show: true`, MA bbox) — MassGIS ArcGIS REST layers queried live as GeoJSON within the map extent: DEP Wetlands (`AGOL/DEP_Wetlands_FieldMaps/1`), Protected Open Space (`AGOL/openspace/0`), NHESP Priority Habitat (`AGOL/NHESP_Priority_Habitats/0`). Note: the legacy MassGIS GeoServer WMS (`giswebservices.massgis.state.ma.us`) is no longer reachable — use `arcgisserver.digital.mass.gov` REST services.
+- **Michigan** (`show: true`, MI bbox) — for future MI clients.
+
+Groups with a `bbox` appear in the panel **only while the map center is inside that region** — for MCCC you see the Massachusetts section; pan to Michigan and the MI section appears instead.
+
+All `arcgis-geojson` layers re-query on pan/zoom, capped at 500 features per request.
+
+- **MI: EGLE Wetlands (NWI)** — EGLE ArcGIS REST service (`WrdOpenData/MapServer/9`).
 - **MI: DNR Protected Lands** — the DNR open data hub does not publish a single stable REST endpoint. The configured URL is the best-known `DNR_Managed_Lands` FeatureServer; if it returns an error the panel row shows "unavailable". **Fallback:** download the "DNR Managed Lands" layer from <https://gis-midnr.opendata.arcgis.com/> as GeoJSON and either drag-drop it onto the map (session preview) or host it in the repo and add it to `config.js` as a static layer.
 
 ## 6. Repo layout

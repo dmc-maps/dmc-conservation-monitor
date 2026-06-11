@@ -110,7 +110,7 @@ main { position: relative; height: calc(100% - 64px); }
   border-top: 1px solid var(--panel-edge);
   padding-top: 10px;
 }
-#layer-panel section:first-of-type h3 { border-top: none; padding-top: 0; }
+#layer-panel > section:first-of-type h3 { border-top: none; padding-top: 0; }
 
 .layer-row {
   display: flex;

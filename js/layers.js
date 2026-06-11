@@ -13,9 +13,8 @@ const Layers = (() => {
   let orthoLayer = null;
   let footprintLayer = null;
 
-  function inMichigan() {
+  function centerInBbox(b) {
     const c = map.getCenter();
-    const b = DMC_CONFIG.miBbox;
     return c.lng >= b.west && c.lng <= b.east && c.lat >= b.south && c.lat <= b.north;
   }
 
@@ -38,7 +37,10 @@ const Layers = (() => {
       if (!map.hasLayer(group)) return;
       const b = map.getBounds();
       const env = `${b.getWest()},${b.getSouth()},${b.getEast()},${b.getNorth()}`;
-      const url = `${def.url}/query?where=1%3D1&geometry=${env}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry=true&f=geojson&resultRecordCount=500`;
+      // Generalize geometry to ~1 px at the current zoom so dense
+      // polygon layers (e.g. DEP Wetlands) stay responsive.
+      const offset = (b.getEast() - b.getWest()) / map.getSize().x;
+      const url = `${def.url}/query?where=1%3D1&geometry=${env}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry=true&f=geojson&resultRecordCount=500&geometryPrecision=6&maxAllowableOffset=${offset}`;
       if (aborter) aborter.abort();
       aborter = new AbortController();
       try {
@@ -73,39 +75,53 @@ const Layers = (() => {
 
   function buildPanel(mapRef) {
     map = mapRef;
-    const natList = document.getElementById("layers-national");
-    const miList = document.getElementById("layers-michigan");
-    const miSection = document.getElementById("layers-mi-section");
+    const groupsWrap = document.getElementById("layers-groups");
 
-    for (const def of DMC_CONFIG.externalLayers) {
-      const listEl = def.group === "michigan" ? miList : natList;
-      const row = document.createElement("label");
-      row.className = "layer-row";
-      const cb = document.createElement("input");
-      cb.type = "checkbox";
-      const txt = document.createElement("span");
-      txt.textContent = def.label;
-      const status = document.createElement("em");
-      status.className = "layer-status";
-      row.append(cb, txt, status);
-      listEl.appendChild(row);
+    // Render one section per visible group; groups with show:false stay
+    // defined in config (nationwide capability) but never display.
+    for (const [gid, gdef] of Object.entries(DMC_CONFIG.layerGroups)) {
+      if (!gdef.show) continue;
+      const defs = DMC_CONFIG.externalLayers.filter((d) => d.group === gid);
+      if (!defs.length) continue;
 
-      cb.addEventListener("change", () => {
-        if (cb.checked) {
-          if (!active[def.id]) {
-            active[def.id] = def.type === "wms" ? makeWms(def) : makeArcGisGeoJson(def, status);
+      const section = document.createElement("section");
+      const h3 = document.createElement("h3");
+      h3.textContent = gdef.label;
+      section.appendChild(h3);
+
+      for (const def of defs) {
+        const row = document.createElement("label");
+        row.className = "layer-row";
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        const txt = document.createElement("span");
+        txt.textContent = def.label;
+        const status = document.createElement("em");
+        status.className = "layer-status";
+        row.append(cb, txt, status);
+        section.appendChild(row);
+
+        cb.addEventListener("change", () => {
+          if (cb.checked) {
+            if (!active[def.id]) {
+              active[def.id] = def.type === "wms" ? makeWms(def) : makeArcGisGeoJson(def, status);
+            }
+            active[def.id].addTo(map);
+          } else if (active[def.id]) {
+            map.removeLayer(active[def.id]);
           }
-          active[def.id].addTo(map);
-        } else if (active[def.id]) {
-          map.removeLayer(active[def.id]);
-        }
-      });
-    }
+        });
+      }
 
-    // MI section visibility tracks map position.
-    const syncMi = () => { miSection.style.display = inMichigan() ? "" : "none"; };
-    map.on("moveend", syncMi);
-    syncMi();
+      groupsWrap.appendChild(section);
+
+      // Regional groups appear only while the map center is in-region.
+      if (gdef.bbox) {
+        const sync = () => { section.style.display = centerInBbox(gdef.bbox) ? "" : "none"; };
+        map.on("moveend", sync);
+        sync();
+      }
+    }
 
     setupDropSlot();
   }
