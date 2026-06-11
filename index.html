@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCCC Conservation Monitor — Digital Mapping Consultants</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <header id="dashboard">
+    <div class="brand">
+      <span class="brand-org">MCCC</span>
+      <span class="brand-title">Conservation Land Monitor</span>
+      <span id="conn-badge" class="conn-badge"></span>
+    </div>
+    <div class="stats">
+      <div class="stat"><span class="stat-label">Parcels</span><span class="stat-value" id="stat-parcels">—</span></div>
+      <div class="stat"><span class="stat-label">Watch + Action</span><span class="stat-value" id="stat-alerts">—</span></div>
+      <div class="stat"><span class="stat-label">Last Updated</span><span class="stat-value mono" id="stat-updated">—</span></div>
+      <div class="stat"><span class="stat-label">Next Flight</span><span class="stat-value mono" id="stat-next-flight">—</span></div>
+    </div>
+  </header>
+
+  <main>
+    <div id="map"></div>
+
+    <!-- Layer panel -->
+    <aside id="layer-panel">
+      <h2>Layers</h2>
+
+      <section>
+        <h3>DMC Collected</h3>
+        <label class="layer-row"><input type="checkbox" id="toggle-orthos" checked><span>Drone orthomosaic (selected flight)</span></label>
+        <label class="layer-row"><input type="checkbox" id="toggle-footprints" checked><span>Flight footprint</span></label>
+        <label class="layer-row"><input type="checkbox" id="toggle-species" checked><span>Species flags</span></label>
+        <div id="layers-dropped"></div>
+        <p class="drop-hint">Drag a .geojson onto the map to preview it (session only).</p>
+      </section>
+
+      <section>
+        <h3>National</h3>
+        <div id="layers-national"></div>
+      </section>
+
+      <section id="layers-mi-section">
+        <h3>Michigan</h3>
+        <div id="layers-michigan"></div>
+      </section>
+
+      <section class="legend">
+        <h3>Parcel Status</h3>
+        <div class="legend-row"><i style="background:#2d6a4f"></i> Stable</div>
+        <div class="legend-row"><i style="background:#f4a261"></i> Watch</div>
+        <div class="legend-row"><i style="background:#e63946"></i> Action Required</div>
+      </section>
+    </aside>
+
+    <!-- Per-parcel side panel -->
+    <aside id="side-panel" class="hidden">
+      <button id="panel-close" title="Close">×</button>
+      <h2 id="panel-name">—</h2>
+      <div class="panel-meta">
+        <span id="panel-status" class="status-badge">—</span>
+        <span id="panel-acreage" class="mono">—</span>
+      </div>
+      <dl class="panel-flights">
+        <div><dt>Last flight</dt><dd class="mono" id="panel-last-flight">—</dd></div>
+        <div><dt>Next scheduled</dt><dd class="mono" id="panel-next-flight">—</dd></div>
+      </dl>
+
+      <h3>Imagery</h3>
+      <div id="panel-gallery" class="gallery"></div>
+      <p id="panel-gallery-empty" class="empty-note">No media yet for this parcel.</p>
+
+      <div class="obs-header">
+        <h3>Observations</h3>
+        <select id="obs-filter" class="mono">
+          <option value="all">all types</option>
+          <option value="drone_flight">drone flight</option>
+          <option value="gps_survey">gps survey</option>
+          <option value="field_note">field note</option>
+          <option value="thermal">thermal</option>
+          <option value="multispectral">multispectral</option>
+          <option value="data_layer">data layer</option>
+        </select>
+      </div>
+      <ul id="panel-observations" class="obs-list"></ul>
+      <p id="panel-obs-empty" class="empty-note">No observations match.</p>
+
+      <h3>Species Flags</h3>
+      <ul id="panel-species" class="species-list"></ul>
+      <p id="panel-species-empty" class="empty-note">No species flagged.</p>
+
+      <button id="btn-add-observation" class="btn-primary">+ Add observation</button>
+    </aside>
+
+    <!-- Flight date slider -->
+    <div id="flight-bar" class="hidden">
+      <span id="flight-bar-parcel" class="mono"></span>
+      <input type="range" id="flight-slider" min="0" max="0" step="1" value="0">
+      <span id="flight-slider-date" class="mono">—</span>
+      <span id="flight-slider-note"></span>
+    </div>
+  </main>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="hidden">
+    <img id="lightbox-img" alt="">
+    <p id="lightbox-caption" class="mono"></p>
+  </div>
+
+  <!-- Data entry modal -->
+  <div id="modal" class="hidden">
+    <form id="obs-form" class="modal-card">
+      <button id="modal-close" type="button" title="Close">×</button>
+      <h2>New observation — <span id="modal-parcel-name"></span></h2>
+
+      <div class="form-row">
+        <label>Date <input type="date" id="obs-date" class="mono" required></label>
+        <label>Type
+          <select id="obs-type" class="mono" required>
+            <option value="field_note">field note</option>
+            <option value="drone_flight">drone flight</option>
+            <option value="gps_survey">gps survey</option>
+            <option value="thermal">thermal</option>
+            <option value="multispectral">multispectral</option>
+            <option value="data_layer">data layer</option>
+          </select>
+        </label>
+      </div>
+
+      <label>Notes <textarea id="obs-notes" rows="3"></textarea></label>
+      <label>Recorded by <input type="text" id="obs-author" placeholder="name"></label>
+
+      <div class="form-row">
+        <label>Photo / file <input type="file" id="obs-file" accept="image/*"></label>
+        <label>Media type
+          <select id="obs-media-type" class="mono">
+            <option value="rgb">rgb</option>
+            <option value="thermal">thermal</option>
+            <option value="multispectral">multispectral</option>
+            <option value="orthomosaic">orthomosaic</option>
+          </select>
+        </label>
+      </div>
+
+      <label class="check-row"><input type="checkbox" id="obs-species-toggle"> Flag a species</label>
+      <div id="species-fields" class="hidden">
+        <div class="form-row">
+          <label>Species <input type="text" id="species-name" placeholder="e.g. Japanese knotweed"></label>
+          <label>Status
+            <select id="species-status" class="mono">
+              <option value="present">present</option>
+              <option value="treated">treated</option>
+              <option value="monitoring">monitoring</option>
+            </select>
+          </label>
+        </div>
+        <button id="btn-place-pin" class="btn-secondary">Place pin on map</button>
+        <span id="pin-status" class="mono"></span>
+      </div>
+
+      <button id="obs-submit" type="submit" class="btn-primary">Save observation</button>
+    </form>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="config.js"></script>
+  <script src="js/seed-data.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/layers.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/panel.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

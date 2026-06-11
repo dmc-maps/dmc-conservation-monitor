@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "Montview_Parcel",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "loc_id": "M_107520_896781", "map_par_id": "32C-352-001", "prop_id": "32C-352-001", "use_code": "932", "site_addr": "MONTVIEW AVE", "city": "NORTHAMPTON", "zip": "01060", "owner1": "NORTHAMPTON CONSERVATION COMMISSION", "own_addr": "210 MAIN ST", "own_city": "NORTHAMPTON", "own_state": "MA", "own_zip": "01060", "bldg_val": 0, "land_val": 59400, "other_val": 0, "total_val": 59400, "lot_size": 3.246, "ls_price": null, "ls_date": "99990101", "year_built": null, "res_area": null, "style": null, "units": null, "num_rooms": null, "ls_book": "2265", "ls_page": "135", "poly_type": "FEE", "map_no": null, "source": "ASSESS", "plan_id": null, "last_edit": 20250604, "bnd_chk": null, "no_match": "N", "town_id": 214, "fy": 2026, "addr_num": null, "full_str": "MONTVIEW AVE", "location": null, "own_co": null, "reg_id": null, "zoning": null, "bld_area": 0, "lot_units": "Acres", "stories": null }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -72.6221776, 42.3166427 ], [ -72.621439, 42.31633 ], [ -72.6201798, 42.3157598 ], [ -72.6207932, 42.3150363 ], [ -72.62137, 42.3152857 ], [ -72.6208787, 42.3159117 ], [ -72.6214058, 42.3161396 ], [ -72.6218972, 42.3155137 ], [ -72.6221861, 42.3156386 ], [ -72.6224043, 42.3156351 ], [ -72.6223854, 42.3158033 ], [ -72.6224208, 42.3159477 ], [ -72.6223951, 42.3161374 ], [ -72.6223244, 42.3163183 ], [ -72.6222259, 42.3165108 ], [ -72.6221776, 42.3166427 ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "Cutchins_Parcel",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "loc_id": "M_107604_897177", "map_par_id": "32A-274-001", "prop_id": "32A-274-001", "use_code": "929", "site_addr": "78 POMEROY TER", "city": "NORTHAMPTON", "zip": "01060", "owner1": "CITY OF NORTHAMPTON", "own_addr": "210 MAIN ST", "own_city": "NORTHAMPTON", "own_state": "MA", "own_zip": "01060", "bldg_val": 0, "land_val": 142500, "other_val": 0, "total_val": 142500, "lot_size": 8.794, "ls_price": null, "ls_date": "99990101", "year_built": null, "res_area": null, "style": null, "units": null, "num_rooms": null, "ls_book": "11318", "ls_page": "267", "poly_type": "FEE", "map_no": null, "source": "ASSESS", "plan_id": null, "last_edit": 20250604, "bnd_chk": null, "no_match": "N", "town_id": 214, "fy": 2026, "addr_num": "78", "full_str": "POMEROY TER", "location": "REAR 78", "own_co": "PLANNING DEPT", "reg_id": null, "zoning": null, "bld_area": 0, "lot_units": "Acres", "stories": null }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -72.6218421, 42.3194483 ], [ -72.620934, 42.3205148 ], [ -72.6208643, 42.3205035 ], [ -72.620445, 42.3204355 ], [ -72.6199817, 42.3210503 ], [ -72.6199097, 42.3210379 ], [ -72.6200264, 42.3208744 ], [ -72.61949, 42.3206992 ], [ -72.6200698, 42.3198846 ], [ -72.6202838, 42.319584 ], [ -72.6204544, 42.3193442 ], [ -72.6205541, 42.3192042 ], [ -72.620679, 42.3190287 ], [ -72.6212144, 42.3182765 ], [ -72.6215415, 42.3184479 ], [ -72.6221915, 42.319038 ], [ -72.6218421, 42.3194483 ] ] ] } }
+]
+}

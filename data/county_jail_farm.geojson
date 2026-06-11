@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "JailBound",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "loc_id": "M_107798_897116", "map_par_id": "32 -051-001", "prop_id": "32 -051-001", "use_code": "929", "site_addr": "VENTURERS FIELD RD", "city": "NORTHAMPTON", "zip": "01060", "owner1": "COMMONWEALTH OF MASS", "own_addr": "P O BOX 389    1 PRINCE ST", "own_city": "NORTHAMPTON", "own_state": "MA", "own_zip": "01061", "bldg_val": 0, "land_val": 140600, "other_val": 0, "total_val": 140600, "lot_size": 3.0, "ls_price": null, "ls_date": "99990101", "year_built": null, "res_area": null, "style": null, "units": null, "num_rooms": null, "ls_book": "0721", "ls_page": "467", "poly_type": "FEE", "map_no": null, "source": "ASSESS", "plan_id": null, "last_edit": 20250604, "bnd_chk": null, "no_match": "N", "town_id": 214, "fy": 2026, "addr_num": null, "full_str": "VENTURERS FIELD RD", "location": null, "own_co": "C/O REAANN FRENETTE", "reg_id": null, "zoning": null, "bld_area": 0, "lot_units": "Acres", "stories": null }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -72.6168693, 42.3186578 ], [ -72.6171415, 42.3183107 ], [ -72.6202838, 42.319584 ], [ -72.6200698, 42.3198846 ], [ -72.6168693, 42.3186578 ] ] ] } }
+]
+}
